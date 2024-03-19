@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 text-white">
+                        <span class="font-semibold text-xl">Logo</span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Edit</a>
+                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Post</a>
+                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Feed</a>
+                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button id="menu-toggle" class="text-white hover:text-gray-300 focus:outline-none focus:text-gray-300">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Edit</a>
+                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Post</a>
+                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Feed</a>
+                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Feed Page Content -->
+    <div class="container mx-auto py-8">
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <input type="text" id="searchInput" placeholder="Search by title, author name, genre, or publication date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+        </div>
+        <!-- Feed Items -->
+        <div id="feedItems" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+    </div>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Mock data for demonstration
+        const feedData = [
+            { title: 'Book 1', author: 'Author 1', genre: 'Fiction', publicationDate: '2022-01-01' },
+            { title: 'Book 2', author: 'Author 2', genre: 'Non-fiction', publicationDate: '2022-02-01' },
+            { title: 'Book 3', author: 'Author 3', genre: 'Fiction', publicationDate: '2022-03-01' },
+            // Add more items as needed
+        ];
+
+        // Function to render feed items
+        function renderFeedItems(items) {
+            const feedItemsContainer = document.getElementById('feedItems');
+            feedItemsContainer.innerHTML = ''; // Clear previous items
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('bg-white', 'rounded-md', 'shadow-md', 'p-4');
+
+                const title = document.createElement('h2');
+                title.textContent = item.title;
+                title.classList.add('text-lg', 'font-semibold', 'mb-2');
+
+                const author = document.createElement('p');
+                author.textContent = 'Author: ' + item.author;
+
+                const genre = document.createElement('p');
+                genre.textContent = 'Genre: ' + item.genre;
+
+                const publicationDate = document.createElement('p');
+                publicationDate.textContent = 'Publication Date: ' + item.publicationDate;
+
+                card.appendChild(title);
+                card.appendChild(author);
+                card.appendChild(genre);
+                card.appendChild(publicationDate);
+
+                feedItemsContainer.appendChild(card);
+            });
+        }
+
+        // Initial render
+        renderFeedItems(feedData);
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredItems = feedData.filter(item =>
+                item.title.toLowerCase().includes(searchTerm) ||
+                item.author.toLowerCase().includes(searchTerm) ||
+                item.genre.toLowerCase().includes(searchTerm) ||
+                item.publicationDate.includes(searchTerm)
+            );
+            renderFeedItems(filteredItems);
+        });
+    </script>
+</body>
+</html>
