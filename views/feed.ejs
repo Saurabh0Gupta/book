@@ -6,22 +6,24 @@
     <title>Feed</title>
     <!-- Include Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 <body class="bg-gray-100">
     <!-- Navigation Bar -->
-    <nav class="bg-gray-800">
+    <nav class="bg-gray-800 w-full absolute top-0 z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 text-white">
-                        <span class="font-semibold text-xl">Logo</span>
+                        <span class="font-semibold text-xl">SheryAuthor</span>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Edit</a>
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Post</a>
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Feed</a>
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                            <a href="/edit" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Edit</a>
+                            <a href="/post" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Post</a>
+                            <a href="/feed" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Feed</a>
+                            <a href="/profile" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                            <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
                         </div>
                     </div>
                 </div>
@@ -36,25 +38,85 @@
         </div>
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Edit</a>
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Post</a>
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Feed</a>
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+                <a href="/edit" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Edit</a>
+                <a href="/post" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Post</a>
+                <a href="/feed" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Feed</a>
+                <a href="/profile" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+                <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
             </div>
         </div>
     </nav>
-
     <!-- Feed Page Content -->
-    <div class="container mx-auto py-8">
+    <div class="container mx-auto py-8 mt-10">
         <!-- Search Bar -->
         <div class="mb-8">
-            <input type="text" id="searchInput" placeholder="Search by title, author name, genre, or publication date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+            <input type="text" id="searchInput" placeholder="Search your favraite book" class="w-90 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+        <label for="genre-filter">Filter:</label>
+        <select id="genre-filter">
+            <option value="">All books</option>
+            <option value="authorName">Author name</option>
+            <option value="genre">Genre</option>
+            <option value="bookName">Book Name</option>
+            <option value="publication">Publication</option>
+            <!-- Add more options for other genres -->
+        </select>
+        <button onclick="search()" class="p-1 bg-gray-700 text-white font-bold rounded-lg">Search</button>
         </div>
         <!-- Feed Items -->
         <div id="feedItems" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
     </div>
-
+    <div class="line border-b-4 border-indigo-500 my-1 hidden"></div>
+    <div id="feedItems" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <%books.forEach(function(book){%>
+            <div class="book bg-white rounded-md shadow-md p-4">
+                <h2 class="text-lg font-semibold mb-2">Book Name : <%=book.bookName%></h2>
+                <p>Author: <%=book.authorName%></p>
+                <p>Genre: <%=book.genre%></p>
+                <p class="date" data-date="<%=book.publicationDate%>" id="<%=book.publicationDate%>">Publication Date: <%=book.date%></p>
+                <a href="/open/<%=book._id%>"><button class="p-2 bg-blue-600 rounded-lg text-white my-1" >Open</button></a>
+               <a href="/bookpdf/<%=book.bookpdf%>" download="<%=book.bookName%>"> <button class="p-2 bg-blue-600 rounded-lg text-white my-1">Download</button></a>
+            </div>
+        <%})%>
+    </div>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        gsap.from(".book",{
+            opacity:0,
+            scale:0,
+        })
+        async function search(){
+            const searchInput=document.querySelector('#searchInput').value
+            const genre=document.querySelector('#genre-filter').value
+            // console.log(searchInput)
+            // console.log(genre)
+
+            const response=await axios.post('/searchbook',{
+                searchInput,
+                genre
+            })
+            console.log(response)
+            response.data.allUsers.forEach((book)=>{
+                list(book._id,book.bookName,book.publication,book.genre,book.authorName,book.bookpdf)
+            })
+        }
+        function list(id,bookName,publication,genre,authorName,bookpdf){
+            const temp=`<div class="book bg-white rounded-md shadow-md p-4">
+                <h2 class="text-lg font-semibold mb-2">Book Name :${bookName} </h2>
+                <p>Author: ${authorName}</p>
+                <p>Genre: ${genre}</p>
+                <p class="date">Publication Date: ${publication}</p>
+                <a href="/open/${id}"><button class="p-2 bg-blue-600 rounded-lg text-white my-1" >Open</button></a>
+               <a href="/bookpdf/${bookpdf}" download="${bookName}"> <button class="p-2 bg-blue-600 rounded-lg text-white my-1">Download</button></a>
+            </div>`
+            document.querySelector('.line').style.display="block"
+            document.querySelector("#feedItems").innerHTML+=temp
+        }
+        
+    </script>
+        <script>
         document.getElementById('menu-toggle').addEventListener('click', function() {
             var mobileMenu = document.getElementById('mobile-menu');
             if (mobileMenu.classList.contains('hidden')) {
@@ -104,7 +166,7 @@
         }
 
         // Initial render
-        renderFeedItems(feedData);
+        // renderFeedItems(feedData);
 
         // Search functionality
         document.getElementById('searchInput').addEventListener('input', function(event) {
@@ -115,7 +177,7 @@
                 item.genre.toLowerCase().includes(searchTerm) ||
                 item.publicationDate.includes(searchTerm)
             );
-            renderFeedItems(filteredItems);
+            // renderFeedItems(filteredItems);
         });
     </script>
 </body>

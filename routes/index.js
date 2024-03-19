@@ -7,6 +7,7 @@ const bookModel=require('./book')
 passport.use(new localStrategy(authorModel.authenticate()))
 const upload=require('./multer')
 const bookupload=require('./bookmulter')
+const fs=require('fs')
 
 /* GET home page. */
 router.get('/',isLoggedIn, function(req, res, next) {
@@ -18,11 +19,20 @@ router.get('/register', function(req, res, next) {
 router.get('/login', function(req, res, next) {
   res.render('login');
 });
-router.get('/feed', function(req, res, next) {
-  res.render('feed');
+router.get('/feed',isLoggedIn, async function(req, res, next) {
+  const author=await authorModel.findOne({username:req.session.passport.user}).populate('books')
+  try {
+    const books=await bookModel.find()
+  } catch (error) {
+    console.log(error)
+  }
+  res.render('feed',{books});
 });
-router.get('/post', function(req, res, next) {
+router.get('/post',isLoggedIn, function(req, res, next) {
   res.render('post');
+});
+router.get('/nav', function(req, res, next) {
+  res.render('nav');
 });
 router.get('/profile',isLoggedIn,async function(req, res, next) {
   const author=await authorModel.findOne({username:req.session.passport.user}).populate('books')
@@ -36,7 +46,7 @@ router.get('/edit',isLoggedIn,async function(req, res, next) {
 
 router.post('/updated',isLoggedIn,async(req,res)=>{
   const author=await authorModel.findOneAndUpdate({username:req.session.passport.user},{biography:req.body.bio,contactNum:req.body.contact},{new:true})
-  console.log(author)
+  // console.log(author)
   res.redirect('/profile')
 })
 //*********************Authentication**************************/
@@ -57,7 +67,7 @@ router.post('/register',function(req, res, next) {
   }
 });
 router.post('/login',passport.authenticate("local",{
-  successRedirect:"/",
+  successRedirect:"/feed",
   failureRedirect:"/login"
 }),(req,res)=>{
 })
@@ -71,23 +81,40 @@ router.post('/upload',isLoggedIn, upload.single('file'),async (req,res,next)=>{
   const author=await authorModel.findOne({username:req.session.passport.user})
   author.authorImage=req.file.filename;
   await author.save();
-  console.log(author)
+  // console.log(author)
   res.redirect('/edit');
 })
 //*********************multer upload**************************/
 //*********************post book**************************/
 router.post('/postbook',isLoggedIn,async(req,res)=>{
-  const author=await authorModel.findOne({username:req.session.passport.user})
-  const book=await bookModel.create({
-    bookName:req.body.bookname,
-  ISBN:req.body.ISBN,
-  publication:req.body.publication,
-  genre:req.body.genre,
-  })
-  author.books.push(book._id)
-  await author.save();
-  console.log(book)
-  res.render('uploadbook',{book})
+  try {
+    const author = await authorModel.findOne({ username: req.session.passport.user });
+    if (!author) {
+        throw new Error('Author not found');
+    }
+
+    const book = await bookModel.create({
+        bookName: req.body.bookname,
+        ISBN: req.body.isbn,
+        publication: req.body.publication,
+        genre: req.body.genre,
+    });
+
+    book.date = book.publicationDate.toDateString();
+    author.books.push(book._id);
+    book.authorName = author.username;
+    await book.save();
+    await author.save();
+
+    console.log(book.date);
+    console.log(book);
+
+    res.render('uploadbook', { book });
+} catch (error) {
+    console.error('Error uploading book:', error);
+    res.status(500).send('Error uploading book: ' + error.message);
+}
+
 })
 //*********************post book**************************/
 //*********************post book**************************/
@@ -100,5 +127,84 @@ router.post('/uploadbook/:bookid',isLoggedIn,bookupload.single('pdf'),async(req,
   res.redirect('/profile')
 })
 //*********************post book**************************/
+//*********************post book**************************/
+// router.get('/open/:bookId',async(req,res)=>{
+//   const book=await bookModel.findOne({_id:req.params.bookId})
+//   const pdf=book.bookpdf
+//   fs.readFile(`./public/bookpdf/${pdf}`, 'utf8', (err, data) => {
+//     if (err) {
+//         console.error('Error reading file:', err);
+//         return;
+//     }
+//     console.log(pdf)
+//   })
+// })
+//*********************post book**************************/
+//*********************delete & update book**************************/
+router.get('/deletebook/:bookId',isLoggedIn, async(req,res)=>{
+  const book=await bookModel.findOneAndDelete({_id:req.params.bookId})
+  console.log(book)
+  res.redirect('/profile')
+})
+router.get('/updatebook/:bookId',isLoggedIn,async(req,res)=>{
+  const book=await bookModel.findOne({_id:req.params.bookId})
+  res.render('updatebook',{book})
+})
+router.post('/updatedbook/:bookId',isLoggedIn, async(req,res)=>{
+  const book=await bookModel.findOneAndUpdate({_id:req.params.bookId},{bookName:req.body.bookname,ISNB:req.body.isbn,genre:req.body.genre},{new:true})
+  console.log(book)
+  res.redirect('/profile')
+})
+//*********************delete & update book**************************/
+//*********************delete & update book**************************/
+router.post('/searchbook',isLoggedIn,async (req,res)=>{
+  const searchInput=req.body.searchInput
+  const data=req.body.genre
+  var allUsers
+  if('authorName'===data){
+    allUsers = await bookModel.find({
+      authorName: {
+        $regex: searchInput,
+        $options: 'i'
+      }
+    })
+  }else if('genre'===data){
+     allUsers = await bookModel.find({
+      genre: {
+        $regex: searchInput,
+        $options: 'i'
+      }
+    })
+  }else if('publication'===data){
+     allUsers = await bookModel.find({
+      publication: {
+        $regex: searchInput,
+        $options: 'i'
+      }
+    })
+  }else if('bookName'===data){
+     allUsers = await bookModel.find({
+      bookName: {
+        $regex: searchInput,
+        $options: 'i'
+      }
+    })
+  }
+  console.log(allUsers)
+  res.status(200).json({allUsers,message:"pahucha"})
+})
+
+//*********************delete & update book**************************/
+//*********************logout code**************************/
+router.get('/logout',isLoggedIn, (req, res) => {
+  req.logout(function(err) {
+    if (err) {
+        console.error('Error logging out:', err);
+        return res.status(500).send('Error logging out');
+    }
+    res.redirect('/')
+});
+});
+//*********************logout code**************************/
 
 module.exports = router;

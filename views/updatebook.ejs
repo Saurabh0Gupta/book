@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Navbar</title>
+    <title>Create Post</title>
     <!-- Include Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-    <nav class="bg-gray-800">
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 w-full absolute top-0 z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 text-white">
-                        <span class="font-semibold text-xl">Logo</span>
+                        <span class="font-semibold text-xl">SheryAuthor</span>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
@@ -21,6 +22,7 @@
                             <a href="/post" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Post</a>
                             <a href="/feed" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Feed</a>
                             <a href="/profile" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                            <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
                         </div>
                     </div>
                 </div>
@@ -39,31 +41,36 @@
                 <a href="/post" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Post</a>
                 <a href="/feed" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Feed</a>
                 <a href="/profile" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+                <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
             </div>
         </div>
     </nav>
-    <!-- <input type="button">
-<input type="checkbox">
-<input type="color">
-<input type="date">
-<input type="datetime-local">
-<input type="email">
-<input type="file">
-<input type="hidden">
-<input type="image">
-<input type="month">
-<input type="number">
-<input type="password">
-<input type="radio">
-<input type="range">
-<input type="reset">
-<input type="search">
-<input type="submit">
-<input type="tel">
-<input type="text">
-<input type="time">
-<input type="url">
-<input type="week"> -->
+
+    <!-- Post Form -->
+    <div class="container mx-auto my-10 py-8">
+        <div class="max-w-lg mx-auto bg-white rounded-lg overflow-hidden shadow-md">
+            <div class="px-6 py-4">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Create Post</h2>
+                <form action="/updatedbook/<%=book._id%>" method="post">
+                    <div class="mb-4">
+                        <label for="bookname" class="block text-gray-700 font-bold mb-2">Book Name:</label>
+                        <input type="text" id="bookname" name="bookname" class="w-full px-3 py-2 leading-tight focus:outline-none focus:shadow-outline border-gray-300 rounded-md" placeholder="Enter book name" value="<%=book.bookName%>">
+                    </div>
+                    <div class="mb-4">
+                        <label for="isbn" class="block text-gray-700 font-bold mb-2">ISBN:</label>
+                        <input type="text" id="isbn" name="isbn" class="w-full px-3 py-2 leading-tight focus:outline-none focus:shadow-outline border-gray-300 rounded-md" placeholder="Enter ISBN" value="<%=book.ISBN%>">
+                    </div> 
+                    <div class="mb-4">
+                        <label for="genre" class="block text-gray-700 font-bold mb-2">Genre:</label>
+                        <input type="text" id="genre" name="genre" class="w-full px-3 py-2 leading-tight focus:outline-none focus:shadow-outline border-gray-300 rounded-md" placeholder="Enter genre" value="<%=book.genre%>">
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.getElementById('menu-toggle').addEventListener('click', function() {
@@ -74,6 +81,15 @@
                 mobileMenu.classList.add('hidden');
             }
         });
+    </script>
+    <script>
+        // document.querySelector("#editbtn").addEventListener("click",function(){
+        //     document.querySelector("#file").click();
+        
+        // })
+        document.querySelector("#fileform").addEventListener("change",function(){
+            document.querySelector("#fileform").submit();
+        })
     </script>
 </body>
 </html>

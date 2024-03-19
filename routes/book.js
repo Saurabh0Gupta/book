@@ -12,6 +12,12 @@ const bookSchema=mongoose.Schema({
   },
   bookpdf:{
     type:String
+  },
+  authorName:{
+    type:String,
+  },
+  date:{
+    type:Date
   }
 })
 

@@ -6,17 +6,21 @@
     <title>User Profile</title>
     <!-- Include Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+    rel="stylesheet"
+/>
     <style>
         /* Add custom styles here */
     </style>
 </head>
 <body class="bg-gray-100">
-    <nav class="bg-gray-800 w-full absolute">
+    <nav class="bg-gray-800 w-full absolute top-0 z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 text-white">
-                        <span class="font-semibold text-xl">Logo</span>
+                        <span class="font-semibold text-xl">SheryAuthor</span>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
@@ -24,6 +28,7 @@
                             <a href="/post" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Post</a>
                             <a href="/feed" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Feed</a>
                             <a href="/profile" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                            <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
                         </div>
                     </div>
                 </div>
@@ -42,6 +47,7 @@
                 <a href="/post" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Post</a>
                 <a href="/feed" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Feed</a>
                 <a href="/profile" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+                <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
             </div>
         </div>
     </nav>
@@ -55,23 +61,46 @@
                     <h2 class="text-xl font-semibold text-gray-800 mb-2"><%=author.username%></h2>
                     <p class="text-gray-600 mb-4">Web Developer</p>
                     <div class="flex flex-col md:flex-row items-center">
-                        <div class="flex-grow mb-2 md:mr-4">
-                            <p class="text-gray-700 mb-1">Email:</p>
-                            <p class="text-gray-600"><%=author.email%></p>
-                        </div>
-                        <div class="flex-grow">
-                            <p class="text-gray-700 mb-1">Phone:</p>
-                            <p class="text-gray-600"><%=author.contactNum%></p>
-                        </div>
+                        <%if(author.email!==undefined){%>
+                            <div class="flex-grow mb-2 md:mr-4">
+                                <p class="text-gray-700 mb-1">Email:</p>
+                                <p class="text-gray-600"><%=author.email%></p>
+                            </div>
+                        <%}%>
+                        <%if(author.contactNum!==undefined){%>
+                            <div class="flex-grow">
+                                <p class="text-gray-700 mb-1">Phone:</p>
+                                <p class="text-gray-600"><%=author.contactNum%></p>
+                            </div>
+                        <%}%>
                     </div>
                 </div>
             </div>
             <div class="mt-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">About Me</h3>
-                <p class="text-gray-700"><%=author.biography%></p>
+                <%if(author.biography!==undefined){%>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">About Me</h3>
+                    <p class="text-gray-700"><%=author.biography%></p>
+                <%}%>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <%author.books.forEach(function(book){%>
+                    <div class="book bg-white rounded-md shadow-md p-4">
+                        <a href="/updatebook/<%=book._id%>"><i class="ri-pencil-line bg-gray-200 rounded-lg p-1 cursor-pointer"></i></a>
+                        <a href="/deletebook/<%=book._id%>"><i class="ri-close-line bg-gray-200	rounded-lg p-1 cursor-pointer"></i></a>
+                        <h2 class="text-lg font-semibold mb-2">Book Name : <%=book.bookName%></h2>
+                        <p>Author: <%=book.authorName%></p>
+                        <p>Genre: <%=book.genre%></p>
+                        <p>ISBN: <%=book.ISBN%></p>
+                        <p class="date" data-date="<%=book.publicationDate%>" id="<%=book.publicationDate%>">Publication Date: <%=book.date%></p>
+                        <a href="/open/<%=book._id%>"><button class="p-2 bg-blue-600 rounded-lg text-white my-1" >Open</button></a>
+                       <a href="/bookpdf/<%=book.bookpdf%>" download="<%=book.bookName%>"> <button class="p-2 bg-blue-600 rounded-lg text-white my-1">Download</button></a>
+                    </div>
+                <%})%>
             </div>
         </div>
+        
     </div>
+
 </body>
 <script>
     document.getElementById('menu-toggle').addEventListener('click', function() {
