@@ -47,7 +47,7 @@ router.post('/updated',isLoggedIn,async(req,res)=>{
 })
 //*********************Authentication**************************/
 router.post('/register',function(req, res, next) {
-  try {
+    console.log("hello 51")
     const author=new authorModel({
       username :req.body.username,
       email:req.body.email,
@@ -55,12 +55,11 @@ router.post('/register',function(req, res, next) {
      authorModel.register(author,req.body.password)
      .then(function(){
        passport.authenticate('local')(req,res,function(){
+      })
+      console.log("hello 62")
       res.redirect('/feed');
-       })
-     })
-  } catch (error) {
-    console.log(error.message)
-  }
+    })
+
 });
 router.post('/login',passport.authenticate("local",{
   successRedirect:"/feed",
@@ -104,7 +103,6 @@ router.post('/postbook',isLoggedIn,async(req,res)=>{
 
     console.log(book.date);
     console.log(book);
-
     res.render('uploadbook', { book });
 } catch (error) {
     console.error('Error uploading book:', error);

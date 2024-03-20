@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const plm = require('passport-local-mongoose')
-mongoose.connect('mongodb://0.0.0.0/book').then(() => {
+mongoose.connect('mongodb+srv://saurabh:saurabh%40admin@cluster0.bxejvoq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(() => {
   console.log('connected to db')
 })
 
