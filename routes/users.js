@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const plm = require('passport-local-mongoose')
-mongoose.connect("mongodb+srv://saurabh:saurabh%40admin@cluster0.bxejvoq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(() => {
+mongoose.connect('mongodb://0.0.0.0/book').then(() => {
   console.log('connected to db')
 })
 
@@ -13,6 +13,7 @@ const authorSchema=mongoose.Schema({
     type:String,
     required:true,
     unique:true,
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
   },
   password:{
     type:String,
