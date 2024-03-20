@@ -11,7 +11,8 @@ const fs=require('fs')
 
 /* GET home page. */
 router.get('/',isLoggedIn, function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  const user=req.user
+  res.render('index', { title: 'Express',user });
 });
 router.get('/register', function(req, res, next) {
   res.render('register');
@@ -57,12 +58,12 @@ router.post('/register',function(req, res, next) {
        passport.authenticate('local')(req,res,function(){
       })
       console.log("hello 62")
-      res.redirect('/feed');
+      res.redirect('/');
     })
 
 });
 router.post('/login',passport.authenticate("local",{
-  successRedirect:"/feed",
+  successRedirect:"/",
   failureRedirect:"/login"
 }),(req,res)=>{
 })
