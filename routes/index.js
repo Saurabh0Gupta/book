@@ -21,11 +21,7 @@ router.get('/login', function(req, res, next) {
 });
 router.get('/feed',isLoggedIn, async function(req, res, next) {
   const author=await authorModel.findOne({username:req.session.passport.user}).populate('books')
-  try {
     const books=await bookModel.find()
-  } catch (error) {
-    console.log(error)
-  }
   res.render('feed',{books});
 });
 router.get('/post',isLoggedIn, function(req, res, next) {
@@ -59,7 +55,7 @@ router.post('/register',function(req, res, next) {
      authorModel.register(author,req.body.password)
      .then(function(){
        passport.authenticate('local')(req,res,function(){
-      res.redirect('/');
+      res.redirect('/feed');
        })
      })
   } catch (error) {
@@ -127,19 +123,6 @@ router.post('/uploadbook/:bookid',isLoggedIn,bookupload.single('pdf'),async(req,
   res.redirect('/profile')
 })
 //*********************post book**************************/
-//*********************post book**************************/
-// router.get('/open/:bookId',async(req,res)=>{
-//   const book=await bookModel.findOne({_id:req.params.bookId})
-//   const pdf=book.bookpdf
-//   fs.readFile(`./public/bookpdf/${pdf}`, 'utf8', (err, data) => {
-//     if (err) {
-//         console.error('Error reading file:', err);
-//         return;
-//     }
-//     console.log(pdf)
-//   })
-// })
-//*********************post book**************************/
 //*********************delete & update book**************************/
 router.get('/deletebook/:bookId',isLoggedIn, async(req,res)=>{
   const book=await bookModel.findOneAndDelete({_id:req.params.bookId})
@@ -188,10 +171,16 @@ router.post('/searchbook',isLoggedIn,async (req,res)=>{
         $regex: searchInput,
         $options: 'i'
       }
+     
     })
   }
-  console.log(allUsers)
-  res.status(200).json({allUsers,message:"pahucha"})
+    console.log(allUsers)
+    res.status(200).json({allUsers,message:"pahucha"})
+  
+})
+router.get('/deleteaccount/:id',async (req,res)=>{
+  const author=await authorModel.findOneAndDelete({_id:req.params.id})
+  res.redirect('/register')
 })
 
 //*********************delete & update book**************************/

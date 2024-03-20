@@ -72,8 +72,8 @@
                 <h2 class="text-lg font-semibold mb-2">Book Name : <%=book.bookName%></h2>
                 <p>Author: <%=book.authorName%></p>
                 <p>Genre: <%=book.genre%></p>
-                <p class="date" data-date="<%=book.publicationDate%>" id="<%=book.publicationDate%>">Publication Date: <%=book.date%></p>
-                <a href="/open/<%=book._id%>"><button class="p-2 bg-blue-600 rounded-lg text-white my-1" >Open</button></a>
+                <p class="date" data-date="<%=book.publicationDate%>" id="<%=book.publicationDate%>">Publication : <%=book.publication%></p>
+                <a href="/bookpdf/<%=book.bookpdf%>"><button class="p-2 bg-blue-600 rounded-lg text-white my-1" >Open</button></a>
                <a href="/bookpdf/<%=book.bookpdf%>" download="<%=book.bookName%>"> <button class="p-2 bg-blue-600 rounded-lg text-white my-1">Download</button></a>
             </div>
         <%})%>
@@ -92,15 +92,22 @@
             const genre=document.querySelector('#genre-filter').value
             // console.log(searchInput)
             // console.log(genre)
-
+            if(searchInput==""){
+                alert("give input");
+                return;
+            }
             const response=await axios.post('/searchbook',{
                 searchInput,
-                genre
+                genre,
             })
             console.log(response)
-            response.data.allUsers.forEach((book)=>{
-                list(book._id,book.bookName,book.publication,book.genre,book.authorName,book.bookpdf)
-            })
+            if(response.data.allUsers.length!==0){
+                response.data.allUsers.forEach((book)=>{
+                    list(book._id,book.bookName,book.publication,book.genre,book.authorName,book.bookpdf)
+                })
+            }else{
+                alert('No such book available')
+            }
         }
         function list(id,bookName,publication,genre,authorName,bookpdf){
             const temp=`<div class="book bg-white rounded-md shadow-md p-4">
