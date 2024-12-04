@@ -3,9 +3,13 @@ const mongoose = require('mongoose');
 
 const bookSchema=mongoose.Schema({
   bookName:String,
+
   ISBN:Number,
+
   publication:String,
+
   genre:String,
+  
   publicationDate:{
     type:Date,
     default:Date.now()
@@ -17,7 +21,7 @@ const bookSchema=mongoose.Schema({
     type:String,
   },
   date:{
-    type:Date
+    type:String,
   }
 })
 

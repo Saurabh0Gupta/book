@@ -62,7 +62,17 @@
                     </div> 
                     <div class="mb-4">
                         <label for="genre" class="block text-gray-700 font-bold mb-2">Genre:</label>
-                        <input type="text" id="genre" name="genre" class="w-full px-3 py-2 leading-tight focus:outline-none focus:shadow-outline border-gray-300 rounded-md" placeholder="Enter genre" value="<%=book.genre%>">
+                        <select id="genre" name="genre" class="w-full px-3 py-2 leading-tight focus:outline-none focus:shadow-outline border-gray-300 rounded-md">
+                            <option value="" disabled selected>Select genre</option>
+                            <option value="fiction">Fiction</option>
+                            <option value="non-fiction">Non-Fiction</option>
+                            <option value="mystery">Mystery</option>
+                            <option value="fantasy">Fantasy</option>
+                            <option value="sci-fi">Science Fiction</option>
+                            <option value="biography">Biography</option>
+                            <option value="history">History</option>
+                            <option value="romance">Romance</option>
+                        </select>
                     </div>
                     <div class="flex justify-end">
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Submit</button>
